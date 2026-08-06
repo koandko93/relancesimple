@@ -65,7 +65,6 @@
   .note{text-align:center;color:var(--tx2);font-size:13px;margin-top:18px}
   footer{border-top:1px solid var(--bd);padding:30px 0 44px;text-align:center;color:var(--tx2);font-size:13.5px}
   footer a{color:#a5f3fc;text-decoration:none}
-  .honey{position:absolute;left:-9999px;opacity:0}
 </style>
 </head>
 <body>
@@ -102,10 +101,10 @@
       <h2>Rejoindre la liste d'attente</h2>
       <p class="lead">Recevez le template gratuit, et soyez informé·e en premier quand RelanceSimple arrive. Aucun paiement, aucun engagement.</p>
       <form id="waitlist-form" action="https://formsubmit.co/contact@relancesimple.fr" method="POST">
-        <input type="hidden" name="_subject" value="🎯 Nouvelle inscription — RelanceSimple">
+        <input type="hidden" name="_subject" value="Nouvelle inscription — RelanceSimple">
         <input type="hidden" name="_template" value="table">
         <input type="hidden" name="_captcha" value="false">
-        <input type="text" name="_honey" class="honey" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <input type="hidden" name="_next" value="http://relancesimple.fr/merci.html">
         <div>
           <label for="email">Votre email</label>
           <input type="email" id="email" name="email" placeholder="vous@exemple.fr" required autocomplete="email">
@@ -132,39 +131,5 @@
   </footer>
 </div>
 
-<script>
-(function(){
-  var form=document.getElementById('waitlist-form');
-  var msg=document.getElementById('msg');
-  form.addEventListener('submit',function(e){
-    e.preventDefault();
-    if(!form.checkValidity()){form.reportValidity();return;}
-    var btn=form.querySelector('.btn-submit');
-    var orig=btn.textContent;
-    btn.disabled=true;btn.textContent='Envoi…';
-    msg.className='msg';msg.textContent='';
-    var fd=new FormData(form);
-    fetch(form.action,{method:'POST',body:fd,headers:{'Accept':'application/json'}})
-      .then(function(r){return r.json().catch(function(){return {success:'false'};});})
-      .then(function(d){
-        if(d.success==='true'||d.success===true){
-          msg.className='msg ok';
-          msg.textContent='✅ Merci ! Vous êtes sur la liste. Le template gratuit arrive dans votre boîte mail.';
-          form.querySelector('input[type=email]').value='';
-          form.querySelectorAll('input[type=radio]').forEach(function(r){r.checked=false;});
-          form.querySelector('input[type=checkbox]').checked=false;
-        }else{
-          msg.className='msg err';
-          msg.textContent='❌ Une erreur est survenue. Réessayez, ou écrivez-nous à contact@relancesimple.fr';
-        }
-      })
-      .catch(function(){
-        msg.className='msg err';
-        msg.textContent='❌ Envoi impossible pour le moment. Réessayez, ou écrivez-nous à contact@relancesimple.fr';
-      })
-      .finally(function(){btn.disabled=false;btn.textContent=orig;});
-  });
-})();
-</script>
 </body>
 </html>
